@@ -1,0 +1,9 @@
+---
+- hosts: all
+  gather_facts: no
+  tasks:
+    - name: Runing system update
+      apt: update_cache=yes
+        upgrade=safe
+      register: result
+    - debug: var=result.stdout_lines

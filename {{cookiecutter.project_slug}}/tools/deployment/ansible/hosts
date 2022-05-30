@@ -1,0 +1,7 @@
+all:
+    hosts: exampleserver
+    vars:
+        repo_url: ssh://git@bitbucket.org/user
+        repo: project
+        home_dir: /home/deploy
+        repo_dir: "{{ home_dir }}/{{ repo }}"

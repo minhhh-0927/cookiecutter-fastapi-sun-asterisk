@@ -1,0 +1,79 @@
+version: '3'
+
+volumes:
+  production_rabbitmq: { }
+  production_redis: { }
+  production_postgres_data: { }
+  production_postgres_data_backups: { }
+
+services:
+  fastapi:
+    build:
+      context: .
+      dockerfile: ./compose/production/fastapi/Dockerfile
+    image: {{ cookiecutter.project_slug }}_production_fastapi
+    container_name: fastapi
+    depends_on:
+      - postgres
+      - redis
+      - rabbitmq
+    env_file:
+      - .env.production
+    ports:
+      - "8000:8000"
+
+  redis:
+    image: redis:5.0
+    volumes:
+      - production_redis:/data
+    ports:
+      - "6379:6379"
+
+  rabbitmq:
+    image: rabbitmq:3.10
+    volumes:
+      - production_rabbitmq:/var/lib/rabbitmq
+    ports:
+      - "5672:5672"
+
+  celeryworker:
+    build:
+      context: .
+      dockerfile: compose/production/celeryworker/Dockerfile
+    image: {{ cookiecutter.project_slug }}_production_celeryworker
+    container_name: celeryworker
+    env_file:
+      - .env.production
+    depends_on:
+      - redis
+      - rabbitmq
+
+  celerybeat:
+    build:
+      context: .
+      dockerfile: compose/production/celerybeat/Dockerfile
+    image: {{ cookiecutter.project_slug }}_production_celerybeat
+    container_name: celerybeat
+    env_file:
+      - .env.production
+    depends_on:
+      - redis
+      - rabbitmq
+
+  postgres:
+    build:
+      context: .
+      dockerfile: ./compose/postgres/Dockerfile
+    image: {{ cookiecutter.project_slug }}_production_postgres
+    container_name: postgres
+    volumes:
+      - production_postgres_data:/var/lib/postgresql/data:Z
+      - production_postgres_data_backups:/backups:z
+    environment:
+      POSTGRES_DB: "$DB_NAME"
+      POSTGRES_USER: "$DB_USER"
+      POSTGRES_PASSWORD: "$DB_PASSWORD"
+    env_file:
+      - .env.production
+    ports:
+      - "5432:5432"

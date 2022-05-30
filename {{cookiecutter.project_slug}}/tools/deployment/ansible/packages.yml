@@ -1,0 +1,12 @@
+---
+- hosts: all
+  gather_facts: no
+  tasks:
+    - name: Running apt update
+      apt: update_cache=yes
+    - name: Installing required packages
+      apt: name={{item}} state=present
+      with_items:
+        - git
+        - python-pip
+        - libpq-dev

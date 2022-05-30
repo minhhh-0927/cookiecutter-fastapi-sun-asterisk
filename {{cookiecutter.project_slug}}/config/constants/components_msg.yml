@@ -1,0 +1,3 @@
+#Message will be parse in the component
+users:
+  register_success: User was successfully created!

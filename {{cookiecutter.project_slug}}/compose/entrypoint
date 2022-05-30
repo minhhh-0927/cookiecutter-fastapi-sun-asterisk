@@ -1,0 +1,77 @@
+#!/bin/bash
+
+set -o errexit
+set -o pipefail
+set -o nounset
+
+postgres_ready() {
+
+python << END
+import sys
+import os
+from urllib.parse import urlparse
+import psycopg2
+
+try:
+
+    if os.getenv("DATABASE_URI"):
+      database_uri_parse = urlparse(os.getenv("DATABASE_URI"))
+      username = database_uri_parse.username
+      password = database_uri_parse.password
+      database = database_uri_parse.path[1:]
+      hostname = database_uri_parse.hostname
+      port = database_uri_parse.port
+    else:
+      username = os.getenv("DB_USER")
+      password = os.getenv("DB_PASSWORD")
+      database = os.getenv("DB_NAME")
+      hostname = os.getenv("DB_HOST")
+      port = os.getenv("DB_PORT")
+    psycopg2.connect(
+        dbname=database,
+        user=username,
+        password=password,
+        host=hostname,
+        port=port,
+    )
+except psycopg2.OperationalError:
+    sys.exit(-1)
+sys.exit(0)
+
+END
+}
+
+redis_ready() {
+python << END
+import sys
+import os
+from urllib.parse import urlparse
+from redis import Redis
+
+database_uri_parse = urlparse(os.getenv("REDIS_URL"))
+r = Redis(database_uri_parse.hostname, socket_connect_timeout=1) # short timeout for the test
+try:
+  r.ping()
+except (
+  redis.exceptions.ConnectionError,
+  redis.exceptions.BusyLoadingError
+):
+  sys.exit(-1)
+sys.exit(0)
+END
+}
+
+until postgres_ready; do
+  >&2 echo 'Waiting for PostgreSQL to become available...'
+  sleep 1
+done
+>&2 echo 'PostgreSQL is available'
+
+until redis_ready; do
+  >&2 echo 'Waiting for Redis to become available...'
+  sleep 1
+done
+>&2 echo 'Redis is available'
+
+
+exec "$@"

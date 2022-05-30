@@ -1,0 +1,32 @@
+version: '3'
+
+services:
+  fastapi:
+    build:
+      context: .
+      dockerfile: ./compose/testing/fastapi/Dockerfile
+    image: {{ cookiecutter.project_slug }}_tesing_fastapi
+    container_name: fastapi
+    depends_on:
+      - postgres
+    volumes:
+      - .:/code:z
+    env_file:
+      - .env.testing
+    environment:
+      PYTHONPATH: "/code"
+
+  postgres:
+    build:
+      context: .
+      dockerfile: ./compose/postgres/Dockerfile
+    image: {{ cookiecutter.project_slug }}_tesing_postgres
+    container_name: postgres
+    environment:
+      POSTGRES_DB: "db_tesing_name"
+      POSTGRES_USER: "db_testing_user"
+      POSTGRES_PASSWORD: "db_testing_password"
+    env_file:
+      - .env.testing
+    ports:
+      - "5432:5432"

@@ -1,0 +1,28 @@
+---
+- hosts: all
+  become: yes
+  become_user: deploy
+  gather_facts: no
+
+  tasks:
+    - name: pull branch master
+      git: repo={{ repo_url }}/{{ repo }}.git
+        dest={{ repo_dir }}
+        accept_hostkey=yes
+
+- hosts: all
+  gather_facts: no
+  tasks:
+    - name: Install python dependencies
+      pip: requirements={{ repo_dir }}/production.txt extra_args=--upgrade
+
+- hosts: all
+  become: yes
+  become_user: deploy
+  gather_facts: no
+  environment:
+    ENV: "production"
+
+  tasks:
+    - name: Migrate database
+      shell: alembic upgrade head

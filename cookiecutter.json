@@ -1,0 +1,13 @@
+{
+    "project_name": "Name of the project",
+    "project_slug": "{{ cookiecutter.project_name.lower()|replace(' ', '_')|replace('-', '_')|replace('.', '_')|trim() }}",
+    "project_description": "A description of the project",
+    "author": "Your name",
+    "email": "Your address email (you@example.com)",
+    "version": "0.1.0",
+    "_copy_without_render": [
+        "*deployment/*",
+        "not_rendered_dir/*",
+        "rendered_dir/not_rendered_file.ini"
+    ]
+}

@@ -1,0 +1,28 @@
+#Error code will be parse in the component
+system:
+  E0100:
+    value: E0100
+    description: Server has encountered a problem.
+  E0200:
+    value: E0200
+    description: It's not request!
+  E0300:
+    value: E0300
+    description: Unknown error
+
+
+users:
+  E0202:
+    value: E0202
+    description: This is description of the error.
+  E0404:
+    value: E0404
+    description: User not found!!
+
+auth:
+  E1400:
+    value: E1400
+    description: Email and password does not match!
+  E1401:
+    value: E1401
+    description: Unauthenticated!

@@ -1,0 +1,102 @@
+version: '3'
+
+volumes:
+  develop_rabbitmq: { }
+  develop_redis: { }
+  local_postgres_data: { }
+  local_postgres_data_backups: { }
+
+services:
+  fastapi:
+    build:
+      context: .
+      dockerfile: ./compose/develop/fastapi/Dockerfile
+    image: {{ cookiecutter.project_slug }}_develop_fastapi
+    container_name: fastapi
+    depends_on:
+      - postgres
+      - redis
+      - rabbitmq
+    volumes:
+      - .:/code:z
+    env_file:
+      - .env.develop
+    ports:
+      - "8000:8000"
+
+  redis:
+    image: redis:5.0
+    volumes:
+      - develop_redis:/data
+    ports:
+      - "6379:6379"
+
+  rabbitmq:
+    image: rabbitmq:3.10
+    volumes:
+      - develop_rabbitmq:/var/lib/rabbitmq
+    ports:
+      - "5672:5672"
+
+  celeryworker:
+    build:
+      context: .
+      dockerfile: compose/develop/celeryworker/Dockerfile
+    image: {{ cookiecutter.project_slug }}_develop_celeryworker
+    container_name: celeryworker
+    env_file:
+      - .env.develop
+    depends_on:
+      - redis
+      - rabbitmq
+
+  celerybeat:
+    build:
+      context: .
+      dockerfile: compose/develop/celerybeat/Dockerfile
+    image: {{ cookiecutter.project_slug }}_develop_celerybeat
+    container_name: celerybeat
+    env_file:
+      - .env.develop
+    depends_on:
+      - redis
+      - rabbitmq
+
+  postgres:
+    build:
+      context: .
+      dockerfile: ./compose/postgres/Dockerfile
+    image: {{ cookiecutter.project_slug }}_develop_postgres
+    container_name: postgres
+    volumes:
+      - local_postgres_data:/var/lib/postgresql/data:Z
+      - local_postgres_data_backups:/backups:z
+    environment:
+      POSTGRES_DB: "$DB_NAME"
+      POSTGRES_USER: "$DB_USER"
+      POSTGRES_PASSWORD: "$DB_PASSWORD"
+    env_file:
+      - .env.develop
+    ports:
+      - "5432:5432"
+
+  adminer:
+    image: adminer
+    container_name: adminer
+    environment:
+      ADMINER_DEFAULT_SERVER: "postgresql"
+      ADMINER_PLUGINS: "sql-log tables-filter"
+      ADMINER_DESIGN: "nette"
+    ports:
+      - "8080:8080"
+
+  celeryflower:
+    build:
+      context: .
+      dockerfile: compose/develop/celeryflower/Dockerfile
+    image: {{ cookiecutter.project_slug }}_develop_celeryflower
+    container_name: celeryflower
+    env_file:
+      - .env.develop
+    ports:
+      - "5555:5555"
