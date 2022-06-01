@@ -42,7 +42,7 @@ Finally, here is a comparison when you need to build the API codebase with Pytho
 |Easy to study| No | Yes | Yes  | for newbie|
 |Contributing| 23.4k stars | 59.1k stars | 45.4k stars | Github stars |
 |Authors| [Tom Christie](https://fund.django-rest-framework.org/topics/funding/) | [Armin Ronacher](https://en.wikipedia.org/wiki/Flask_(web_framework)#:~:text=Flask%20was%20created%20by%20Armin,make%20into%20a%20serious%20application.) | [Sebastián Ramírez](https://github.com/tiangolo) | Github stars |
-|License| MIT license | BSD License | BSD License | |
+|License| BSD License | BSD License | MIT license | |
 
 ### Object-Relational Mapping (ORM) and Database driver engine
 

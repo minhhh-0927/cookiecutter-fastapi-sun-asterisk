@@ -7,10 +7,10 @@
 
 ### Installation
 
-First, you should create file `env`. In `develop.yml` file, i was setup `docker-compose` using filename `.env.develop`.
+First, you should create file `env`. In `develop.yml` file, i was setup `docker-compose` using filename `.env`.
 
 ```bash
-cp .env.example .env.develop
+cp .env.example .env
 ```
 
 Alternatives, you can use export command like:

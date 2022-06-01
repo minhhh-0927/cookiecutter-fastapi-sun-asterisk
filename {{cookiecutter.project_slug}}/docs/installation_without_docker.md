@@ -10,10 +10,10 @@
 
 ### Installation
 
-First, you should create file `env`. In `develop.yml` file, i was setup `docker-compose` using filename `.env.develop`.
+First, you should create file `env`. In `develop.yml` file, i was setup `docker-compose` using filename `.env`.
 
 ```bash
-cp .env.example .env.develop
+cp .env.example .env
 ```
 
 Alternatives, you can use export command like:
@@ -25,7 +25,7 @@ export SECRET_KEY=hex key....
 
 Next step, if you want to use file `env`, you need update value for key in this file.
 
-After done, you can start install Python dependencies: 
+After done, you can start install Python dependencies:
 
 ```bash
 pip install poetry

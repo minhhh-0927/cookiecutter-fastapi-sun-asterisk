@@ -20,7 +20,7 @@ services:
     volumes:
       - .:/code:z
     env_file:
-      - .env.develop
+      - .env
     ports:
       - "8000:8000"
 
@@ -45,7 +45,7 @@ services:
     image: {{ cookiecutter.project_slug }}_develop_celeryworker
     container_name: celeryworker
     env_file:
-      - .env.develop
+      - .env
     depends_on:
       - redis
       - rabbitmq
@@ -57,7 +57,7 @@ services:
     image: {{ cookiecutter.project_slug }}_develop_celerybeat
     container_name: celerybeat
     env_file:
-      - .env.develop
+      - .env
     depends_on:
       - redis
       - rabbitmq
@@ -76,7 +76,7 @@ services:
       POSTGRES_USER: "$DB_USER"
       POSTGRES_PASSWORD: "$DB_PASSWORD"
     env_file:
-      - .env.develop
+      - .env
     ports:
       - "5432:5432"
 
@@ -97,6 +97,6 @@ services:
     image: {{ cookiecutter.project_slug }}_develop_celeryflower
     container_name: celeryflower
     env_file:
-      - .env.develop
+      - .env
     ports:
       - "5555:5555"
