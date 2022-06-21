@@ -17,8 +17,8 @@ $ cookiecutter https://github.com/minhhh-0927/cookiecutter-fastapi-sun-asterisk
 project_name [Name of the project]: example
 project_slug [example]:
 project_description [A description of the project]:
-author [Your name]: minhhahao
-email [Your address email (you@example.com)]: minhhahao@gmail.com
+author [Your name]: minhexample
+email [Your address email (you@example.com)]: minhexample@gmail.com
 version [0.1.0]:
 $ cd example
 $ ls
